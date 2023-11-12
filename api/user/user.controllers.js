@@ -19,7 +19,7 @@ const User = require("../../models/User");
 //   return token;
 // };
 
-exports.signup = async (req, res, next) => {
+exports.register = async (req, res, next) => {
   try {
     // Take the password from the request and hash it
     // const { password } = req.body;
@@ -28,13 +28,13 @@ exports.signup = async (req, res, next) => {
     // After creating the user, return a token as response
     // token = generateToken(newUser);
     const token = newUser.generateToken();
-    res.status(201).json({ message: "User Created!", token: { token } });
+    res.status(201).json({ token });
   } catch (err) {
     next(err);
   }
 };
 
-exports.signin = async (req, res) => {
+exports.logIn = async (req, res) => {
   try {
     const token = req.user.generateToken();
     res.status(200).json({ token });
@@ -46,8 +46,9 @@ exports.signin = async (req, res) => {
 exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
-    res.status(201).json(users);
+    console.log(users);
+    return res.status(200).json(users);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };

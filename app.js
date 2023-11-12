@@ -9,16 +9,22 @@ const userRouter = require("./api/user/user.routes");
 const categoryRouter = require("./api/category/category.routes");
 const recipeRouter = require("./api/recipe/recipe.routes");
 const IngredientRouter = require("./api/ingredient/ingredient.routes");
+const passport = require("passport");
+const { jwtStrategy, localStrategy } = require("./middleware/passport");
 
 connectDB();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-app.route("/api/user", userRouter);
-app.route("/api/category", categoryRouter);
-app.route("/api/recipe", recipeRouter);
-app.route("/api/ingredient", IngredientRouter);
+app.use(passport.initialize());
+passport.use("local", localStrategy);
+passport.use(jwtStrategy);
+
+app.use("/api/user", userRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/recipe", recipeRouter);
+app.use("/api/ingredient", IngredientRouter);
 
 // Middleware
 app.use(errorHandler);
