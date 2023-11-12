@@ -1,6 +1,9 @@
 const Recipe = require("../../models/Recipe");
+const User = require("../../models/User");
 
-exports.getRecipies = async (req, res, next) => {
+// GET
+
+exports.getRecipes = async (req, res, next) => {
   try {
     const allRecipes = await Recipe.find();
     return res.status(200).json(allRecipes);
@@ -9,7 +12,7 @@ exports.getRecipies = async (req, res, next) => {
   }
 };
 
-exports.getOneRecipies = async (req, res, next) => {
+exports.getOneRecipe = async (req, res, next) => {
   try {
     const { recipeId } = req.params;
     const recipe = await Recipe.findById(recipeId);
@@ -18,6 +21,36 @@ exports.getOneRecipies = async (req, res, next) => {
     return next(error);
   }
 };
+
+exports.getUserRecipes = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (user) {
+      np;
+      return res.status(200).json(user.recipes);
+    }
+    return res.status(404).json({ message: "User Not Found" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.getOneUserRecipe = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { recipeId } = req.params;
+    const user = await User.findById(userId);
+    if (user) {
+      await user.recipes.findById(recipeId);
+    }
+    return res.status(404).json({ message: "User Not Found" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// POST
 
 exports.createRecipe = async (req, res, next) => {
   try {
@@ -28,22 +61,26 @@ exports.createRecipe = async (req, res, next) => {
   }
 };
 
-exports.updateRecipe = async;
+// PUT
 
-// router.get("/recipe", getRecipies);
-// router.get("/recipe/:recipeId", getOneRecipe);
-// router.post(
-//   "/recipe",
-//   passport.authenticate("jwt", { session: false }),
-//   createRecipe
-// );
-// router.put(
-//   "/recipe/:recipeId",
-//   passport.authenticate("jwt", { session: false }),
-//   updateRecipe
-// );
-// router.delete(
-//   "/recipe/:recipeId",
-//   passport.authenticate("jwt", { session: false }),
-//   deleteRecipe
-// );
+exports.updateRecipe = async (req, res, next) => {
+  try {
+    const { recipeId } = req.params;
+    await Recipe.findByIdAndUpdate(recipeId, req.body);
+    return res.status(204).json({ message: "Recipe Updated" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+// DELETE
+
+exports.deleteRecipe = async (req, res, next) => {
+  try {
+    const { recipeId } = req.params;
+    await Recipe.findByIdAndDelete(recipeId, req.body);
+    return res.status(204).json({ message: "Recipe Deleted" });
+  } catch (error) {
+    return next(error);
+  }
+};
