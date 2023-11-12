@@ -46,7 +46,7 @@ exports.logIn = async (req, res) => {
 exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find();
-    console.log(users);
+    // console.log(users);
     return res.status(200).json(users);
   } catch (err) {
     return next(err);

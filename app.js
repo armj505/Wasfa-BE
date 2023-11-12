@@ -19,7 +19,7 @@ app.use(cors());
 
 app.use(passport.initialize());
 passport.use("local", localStrategy);
-passport.use(jwtStrategy);
+passport.use("jwt", jwtStrategy);
 
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);

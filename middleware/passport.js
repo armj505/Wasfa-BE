@@ -34,11 +34,11 @@ const jwtStrategy = new JwtStrategy(
       if (Date.now() / 1000 < payload.exp) {
         const user = User.findById(payload._id);
         if (!user) done(null, false);
-        done(null, user);
+        return done(null, user); // added return here. If not added, it might not work.
       }
-      done(null, false);
+      return done(null, false);
     } catch (error) {
-      done(error);
+      return done(error);
     }
   }
 );
