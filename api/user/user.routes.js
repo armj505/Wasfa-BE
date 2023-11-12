@@ -14,3 +14,5 @@ router.post(
 router.get("/", passport.authenticate("jwt", { session: false }), getUsers);
 
 module.exports = router;
+
+// test
