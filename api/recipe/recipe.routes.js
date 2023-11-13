@@ -3,7 +3,6 @@ const {
   getRecipes,
   getOneRecipe,
   getUserRecipes,
-  getOneUserRecipe,
   createRecipe,
   updateRecipe,
   deleteRecipe,
@@ -14,7 +13,6 @@ const router = express.Router();
 router.get("/", getRecipes);
 router.get("/:recipeId", getOneRecipe);
 router.get("/:userId", getUserRecipes);
-router.get("/:userId/:recipeId", getOneUserRecipe);
 
 router.post(
   "/",

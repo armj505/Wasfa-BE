@@ -27,22 +27,7 @@ exports.getUserRecipes = async (req, res, next) => {
     const { userId } = req.params;
     const user = await User.findById(userId);
     if (user) {
-      np;
       return res.status(200).json(user.recipes);
-    }
-    return res.status(404).json({ message: "User Not Found" });
-  } catch (error) {
-    return next(error);
-  }
-};
-
-exports.getOneUserRecipe = async (req, res, next) => {
-  try {
-    const { userId } = req.params;
-    const { recipeId } = req.params;
-    const user = await User.findById(userId);
-    if (user) {
-      await user.recipes.findById(recipeId);
     }
     return res.status(404).json({ message: "User Not Found" });
   } catch (error) {
@@ -54,7 +39,12 @@ exports.getOneUserRecipe = async (req, res, next) => {
 
 exports.createRecipe = async (req, res, next) => {
   try {
-    await Recipe.create(req.body);
+    const recipe = await Recipe.create(req.body);
+    const user = await User.findById(req.user._id);
+
+    await user.updateOne({ $push: { recipes: recipe } });
+    await recipe.updateOne({ user: user._id });
+
     return res.status(201).json({ message: "Recipe Created!" });
   } catch (error) {
     return next(error);

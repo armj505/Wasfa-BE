@@ -32,7 +32,8 @@ const jwtStrategy = new JwtStrategy(
     try {
       // exp is a predefined registered claim in JWT tokens
       if (Date.now() / 1000 < payload.exp) {
-        const user = User.findById(payload._id);
+        const user = await User.findById(payload._id);
+
         if (!user) done(null, false);
         return done(null, user); // added return here. If not added, it might not work.
       }
