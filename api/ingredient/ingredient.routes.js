@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const passport = require("passport");
 const {
   getAllIngredient,
   getIngredientById,
@@ -7,10 +7,15 @@ const {
   updtIngredient,
   delIngredient,
 } = require("../ingredient/ingredient.controllers");
+const router = express.Router();
 
 router.get("/", getAllIngredient);
 router.get("/:ingredientId", getIngredientById);
-router.post("/", createIngredient);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  createIngredient
+);
 router.put(
   "/:ingredientId",
   passport.authenticate("jwt", { session: false }),

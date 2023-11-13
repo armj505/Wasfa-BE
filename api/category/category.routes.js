@@ -11,7 +11,11 @@ const router = express.Router();
 
 router.get("/", getAllCategory);
 router.get("/:categoryId", getCategoryById);
-router.post("/", createCategory);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  createCategory
+);
 router.put(
   "/:categoryId",
   passport.authenticate("jwt", { session: false }),
