@@ -1,11 +1,13 @@
 const Recipe = require("../../models/Recipe");
 const User = require("../../models/User");
+const Category = require("../../models/Category");
+const Ingredient = require("../../models/Ingredient");
 
 // GET
 
 exports.getRecipes = async (req, res, next) => {
   try {
-    const allRecipes = await Recipe.find();
+    const allRecipes = await Recipe.find().populate("category");
     return res.status(200).json(allRecipes);
   } catch (error) {
     return next(error);
@@ -41,11 +43,17 @@ exports.createRecipe = async (req, res, next) => {
   try {
     const recipe = await Recipe.create(req.body);
     const user = await User.findById(req.user._id);
-
+    const category = await Category.findById(recipe.category);
+    const ingredientList = await recipe.ingredients;
+    ingredientList.forEach(async (ing) => {
+      const ingredient = await Ingredient.findById(ing.ingredient);
+      await ingredient.updateOne({ $push: { recipes: recipe } });
+    });
     await user.updateOne({ $push: { recipes: recipe } });
     await recipe.updateOne({ user: user._id });
+    await category.updateOne({ $push: { recipes: recipe } });
 
-    return res.status(201).json({ message: "Recipe Created!" });
+    return res.status(201).json(recipe);
   } catch (error) {
     return next(error);
   }

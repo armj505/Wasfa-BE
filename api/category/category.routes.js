@@ -11,11 +11,6 @@ const router = express.Router();
 
 router.get("/", getAllCategory);
 router.get("/:categoryId", getCategoryById);
-router.post(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  createCategory
-);
 router.put(
   "/:categoryId",
   passport.authenticate("jwt", { session: false }),
@@ -25,5 +20,10 @@ router.delete(
   "/:categoryId",
   passport.authenticate("jwt", { session: false }),
   delCategory
+);
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  createCategory
 );
 module.exports = router;
