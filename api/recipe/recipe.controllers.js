@@ -41,7 +41,11 @@ exports.getUserRecipes = async (req, res, next) => {
 
 exports.createRecipe = async (req, res, next) => {
   try {
-    const recipe = await Recipe.create(req.body);
+    let image;
+    if (req.file) {
+      image = req.file.path;
+    }
+    const recipe = await Recipe.create({ ...req.body, image });
     const user = await User.findById(req.user._id);
     const category = await Category.findById(recipe.category);
     const ingredientList = await recipe.ingredients;
