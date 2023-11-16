@@ -20,7 +20,10 @@ exports.getOneRecipe = async (req, res, next) => {
     const recipe = await Recipe.findById(recipeId).populate([
       "user",
       "category",
-      "ingredients",
+      {
+        path: "ingredients",
+        populate: { path: "ingredient" },
+      },
     ]);
     return res.status(200).json(recipe);
   } catch (error) {
