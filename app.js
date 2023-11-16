@@ -11,11 +11,16 @@ const recipeRouter = require("./api/recipe/recipe.routes");
 const IngredientRouter = require("./api/ingredient/ingredient.routes");
 const passport = require("passport");
 const { jwtStrategy, localStrategy } = require("./middleware/passport");
+const path = require("path");
 
 connectDB();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
+app.use(
+  "/uploads/images",
+  express.static(path.join(__dirname, "/uploads/images"))
+);
 
 app.use(passport.initialize());
 passport.use("local", localStrategy);

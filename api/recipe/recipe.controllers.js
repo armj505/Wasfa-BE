@@ -67,8 +67,12 @@ exports.createRecipe = async (req, res, next) => {
 
 exports.updateRecipe = async (req, res, next) => {
   try {
+    let image;
+    if (req.file) {
+      image = req.file.path;
+    }
     const { recipeId } = req.params;
-    await Recipe.findByIdAndUpdate(recipeId, req.body);
+    await Recipe.findByIdAndUpdate(recipeId, { ...req.body, image });
     return res.status(204).json({ message: "Recipe Updated" });
   } catch (error) {
     return next(error);
